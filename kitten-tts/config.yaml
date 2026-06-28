@@ -1,0 +1,38 @@
+server:
+  host: 0.0.0.0
+  port: 8005
+  use_ngrok: false
+  use_auth: false
+  auth_username: user
+  auth_password: password
+  log_file_path: logs\tts_server.log
+  log_file_max_size_mb: 10
+  log_file_backup_count: 5
+model:
+  repo_id: kitten-nano-0.8-fp32
+tts_engine:
+  device: cpu
+paths:
+  model_cache: model_cache
+  output: outputs
+generation_defaults:
+  speed: 1.1
+  language: en
+  speed_factor: 1.1
+audio_output:
+  format: wav
+  sample_rate: 24000
+ui_state:
+  last_text: hello, this is a test
+  last_voice: Kiki
+  last_chunk_size: 200
+  last_split_text_enabled: true
+  hide_chunk_warning: false
+  hide_generation_warning: true
+  theme: dark
+ui:
+  title: Kitten TTS Server
+  show_language_select: true
+  max_predefined_voices_in_dropdown: 50
+debug:
+  save_intermediate_audio: false
