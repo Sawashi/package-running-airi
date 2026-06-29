@@ -1,0 +1,11 @@
+[LOG START] Mon 06/29/2026 23:27:13.70 
+ROOT=C:\games\start-package
+POCKET_TTS_DIR=C:\games\start-package\pocket-tts
+MCP_DIR=C:\games\start-package\pet_ai_mcp
+[PRE] Detecting Python
+[OK] Python: C:\Users\conan\AppData\Local\Programs\Python\Python312\python.exe
+[1/3] Starting 9router
+[2/3] Installing Pocket TTS
+[OK] Pocket TTS installed
+Starting Pocket TTS
+[3/3] Starting MCP

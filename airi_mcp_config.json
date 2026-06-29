@@ -1,0 +1,10 @@
+﻿{
+    "mcpServers":  {
+                       "pet-ai":  {
+                                      "args":  [
+                                                   "C:\\games\\start-package\\pet_ai_mcp\\server.py"
+                                               ],
+                                      "command":  "C:\\Users\\conan\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+                                  }
+                   }
+}

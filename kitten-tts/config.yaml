@@ -24,7 +24,7 @@ audio_output:
   sample_rate: 24000
 ui_state:
   last_text: hello, this is a test
-  last_voice: Kiki
+  last_voice: Bella
   last_chunk_size: 200
   last_split_text_enabled: true
   hide_chunk_warning: false

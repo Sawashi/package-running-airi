@@ -1,47 +1,58 @@
 @echo off
+setlocal EnableExtensions
+
+title Shutdown - Start Package
+
+echo.
+echo ========================================
+echo Stopping Services
+echo ========================================
 
 :: ============================================================
-::  CONFIG — Must match the paths in Prepare.bat
-:: ============================================================
-
-set KITTEN_TTS_DIR=your_kitten_tts_dir
-
-:: ============================================================
-::  Do not edit below this line
+:: Stop Pet AI MCP
 :: ============================================================
 
 echo.
-echo  [1/3] Stopping Pet AI MCP server...
+echo [1/3] Stopping Pet AI MCP...
+
+taskkill /FI "WINDOWTITLE eq Pet AI MCP" /F >nul 2>&1
 taskkill /FI "WINDOWTITLE eq pet-ai-mcp" /F >nul 2>&1
 
-echo  [2/3] Bringing down kitten-tts and Docker...
-set PS_SCRIPT=%TEMP%\kitten_shutdown.ps1
-(
-echo Set-Location '%KITTEN_TTS_DIR%'
-echo Write-Host 'Bringing down kitten-tts...' -ForegroundColor Cyan
-echo docker compose down
-echo Write-Host 'Shutting down Docker Desktop...' -ForegroundColor Yellow
-echo Stop-Process -Name 'Docker Desktop' -Force -ErrorAction SilentlyContinue
-echo Write-Host 'Done.' -ForegroundColor Green
-) > "%PS_SCRIPT%"
+:: ============================================================
+:: Stop Pocket TTS
+:: ============================================================
 
-start "docker-down" powershell -ExecutionPolicy Bypass -File "%PS_SCRIPT%"
+echo.
+echo [2/3] Stopping Pocket TTS...
 
-:: Give docker compose down a moment to kick off
-timeout /t 2 /nobreak >nul
+taskkill /FI "WINDOWTITLE eq Pocket TTS" /F >nul 2>&1
+taskkill /FI "WINDOWTITLE eq pocket-tts" /F >nul 2>&1
 
-echo  [3/3] Stopping 9router...
-taskkill /FI "WINDOWTITLE eq 9router" /F >nul 2>&1
-taskkill /FI "WINDOWTITLE eq docker-up" /F >nul 2>&1
-
-:: Wait for docker-down to finish before exiting
-:wait_loop
-tasklist /FI "WINDOWTITLE eq docker-down" 2>nul | find "powershell.exe" >nul
-if %errorlevel%==0 (
-    timeout /t 2 /nobreak >nul
-    goto wait_loop
+:: Kill any Python process running Pocket TTS
+for /f "skip=1 tokens=2 delims=," %%P in ('tasklist /FO CSV /NH ^| findstr /I "python.exe"') do (
+    wmic process where "ProcessId=%%~P" get CommandLine 2>nul | findstr /I "pocket_tts pocket_tts_api.py" >nul
+    if not errorlevel 1 (
+        taskkill /PID %%~P /F >nul 2>&1
+    )
 )
 
+:: Kill uvicorn if used
+taskkill /IM uvicorn.exe /F >nul 2>&1
+
+:: ============================================================
+:: Stop 9router
+:: ============================================================
+
 echo.
-echo  All services stopped!
+echo [3/3] Stopping 9router...
+
+taskkill /FI "WINDOWTITLE eq 9router" /F >nul 2>&1
+
 echo.
+echo ========================================
+echo All services have been stopped.
+echo ========================================
+echo.
+
+pause
+exit /b 0
